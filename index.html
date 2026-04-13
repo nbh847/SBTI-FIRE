@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIRE-SBTI 财务自由人格测试</title>
+  <style>
+    :root {
+      --bg: #f6faf6;
+      --panel: #ffffff;
+      --text: #1e2a22;
+      --muted: #6a786f;
+      --line: #dbe8dd;
+      --soft: #edf6ef;
+      --accent: #6c8d71;
+      --accent-strong: #4d6a53;
+      --shadow: 0 16px 40px rgba(47, 73, 55, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at top left, #f8fff8 0, #f6faf6 36%, #f2f7f3 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 56px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 28px;
+      margin-top: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(127, 165, 134, 0.18), rgba(127, 165, 134, 0.02));
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--soft);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin: 0 0 12px;
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p.subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108, 141, 113, 0.35);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--soft);
+      color: var(--accent-strong);
+    }
+
+    .btn-secondary:hover {
+      background: var(--line);
+      box-shadow: none;
+    }
+
+    .intro-content {
+      padding: 0 28px 28px;
+    }
+
+    .intro-content p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .author-box {
+      margin-top: 24px;
+      padding: 16px;
+      background: var(--soft);
+      border-radius: 14px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* 测试页面 */
+    .test-container {
+      display: none;
+      padding: 28px;
+    }
+
+    .progress-bar {
+      margin-bottom: 24px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .progress-track {
+      height: 8px;
+      background: var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .question-card {
+      margin-bottom: 32px;
+    }
+
+    .question-text {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-item:hover {
+      border-color: var(--accent);
+      background: var(--soft);
+    }
+
+    .option-item.selected {
+      border-color: var(--accent);
+      background: var(--soft);
+    }
+
+    .option-radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--muted);
+      border-radius: 50%;
+      margin-right: 14px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .option-item.selected .option-radio {
+      border-color: var(--accent);
+    }
+
+    .option-item.selected .option-radio::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .option-text {
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .test-footer {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .test-footer .btn {
+      flex: 1;
+    }
+
+    /* 结果页面 */
+    .result-container {
+      display: none;
+      padding: 28px;
+    }
+
+    .result-hero {
+      text-align: center;
+      padding: 32px 0;
+    }
+
+    .result-emoji {
+      font-size: 80px;
+      margin-bottom: 16px;
+    }
+
+    .result-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .result-type {
+      font-size: 42px;
+      font-weight: 800;
+      margin: 8px 0;
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .result-type-en {
+      font-size: 20px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .result-match {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: var(--soft);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 16px;
+    }
+
+    .result-section {
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+
+    .result-section h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--text);
+    }
+
+    .result-desc {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .dimensions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .dimension-item {
+      padding: 12px;
+      background: var(--soft);
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .dimension-name {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .dimension-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .tip-box {
+      margin-top: 24px;
+      padding: 16px;
+      background: #fff8e6;
+      border-left: 4px solid #fbbf24;
+      border-radius: 8px;
+    }
+
+    .tip-box h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #92400e;
+      margin: 0 0 8px;
+    }
+
+    .tip-box p {
+      font-size: 13px;
+      color: #78716c;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .author-words {
+      margin-top: 24px;
+      padding: 20px;
+      background: var(--soft);
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .result-footer {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .result-footer .btn {
+      flex: 1;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .visible {
+      display: block !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- 首页 -->
+    <div id="intro" class="card hero">
+      <div class="eyebrow">🔥 FIRE-SBTI</div>
+      <h1>财务自由人格测试</h1>
+      <p class="subtitle">MBTI已经过时，FIRE-SBTI来了。</p>
+
+      <div class="intro-content">
+        <p>这是一个基于<strong>15个财务维度</strong>的娱乐测试，将把你分类为<strong>27种财务人格类型</strong>之一。</p>
+        <p>你是FIRE达人？月光族？还是币圈HODL？</p>
+        <p>测试仅需<strong>2分钟</strong>，完成后你的财务人格将无处遁形。</p>
+
+        <div class="author-box">
+          <strong>🎯 参考项目：</strong><a href="https://github.com/UnluckyNinja/SBTI-test" target="_blank">SBTI-test</a><br>
+          <strong>🔥 主题：</strong>财务自由 (FIRE) + 搞怪娱乐
+        </div>
+      </div>
+
+      <button class="btn" onclick="startTest()">开始测试</button>
+    </div>
+
+    <!-- 测试页 -->
+    <div id="test" class="card test-container">
+      <div class="progress-bar">
+        <div class="progress-label">
+          <span>测试进度</span>
+          <span id="progress-text">0 / 30</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div id="questions-container"></div>
+
+      <div class="test-footer">
+        <button class="btn btn-secondary" onclick="goToIntro()">返回首页</button>
+        <button class="btn" id="submit-btn" onclick="submitTest()" disabled>提交并查看结果</button>
+      </div>
+    </div>
+
+    <!-- 结果页 -->
+    <div id="result" class="card result-container">
+      <div class="result-hero">
+        <div class="result-emoji" id="result-emoji">🔥</div>
+        <div class="result-title">你的财务人格类型</div>
+        <div class="result-type" id="result-type">FIRE达人</div>
+        <div class="result-type-en" id="result-type-en">FIRE Master</div>
+        <div class="result-match" id="result-match">匹配度 92%</div>
+      </div>
+
+      <div class="result-section">
+        <h3>📊 该人格的简单解读</h3>
+        <div class="result-desc" id="result-desc">
+          描述内容...
+        </div>
+      </div>
+
+      <div class="result-section">
+        <h3>📈 十五维度评分</h3>
+        <div class="dimensions-grid" id="dimensions-grid"></div>
+      </div>
+
+      <div class="tip-box">
+        <h4>💡 友情提示</h4>
+        <p>本测试仅供娱乐，别拿它当投资建议、理财指导、人生规划或离婚判决书。投资有风险，入市需谨慎。</p>
+      </div>
+
+      <div class="author-words">
+        <strong>作者的话：</strong><br>
+        本测试参考 SBTI 项目改编，主题替换为财务自由（FIRE）。初衷是用搞怪的方式让大家思考自己的财务状况和理财观念。<br><br>
+        由于作者的人格是"币圈HODL"，所以平等的攻击了各位，在此抱歉！如有冒犯非常抱歉！<br><br>
+        总之以娱乐为主，还请不要用于盈利呀。
+      </div>
+
+      <div class="result-footer">
+        <button class="btn btn-secondary" onclick="goToIntro()">回到首页</button>
+        <button class="btn" onclick="restartTest()">重新测试</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============ 数据定义 ============
+
+    // 15个财务维度定义
+    const DIMENSIONS = [
+      // 财富模型 (F)
+      { code: 'F1', name: '资产规模认知' },
+      { code: 'F2', name: '收入结构多元化' },
+      { code: 'F3', name: '净资产意识' },
+      // 风险模型 (R)
+      { code: 'R1', name: '风险承受力' },
+      { code: 'R2', name: '恐慌指数' },
+      { code: 'R3', name: '杠杆态度' },
+      // 消费模型 (C)
+      { code: 'C1', name: '消费冲动度' },
+      { code: 'C2', name: '极简倾向' },
+      { code: 'C3', name: '社交消费压力' },
+      // 规划模型 (P)
+      { code: 'P1', name: 'FIRE目标清晰度' },
+      { code: 'P2', name: '储蓄率稳定性' },
+      { code: 'P3', name: '退休紧迫感' },
+      // 投资模型 (I)
+      { code: 'I1', name: '投资知识水平' },
+      { code: 'I2', name: '主动/被动偏好' },
+      { code: 'I3', name: '收益预期' }
+    ];
+
+    // 30道题目 (每维度2题)
+    const QUESTIONS = [
+      // F1: 资产规模认知
+      { dimension: 'F1', question: "你知道自己现在的净资产是多少吗？", options: ["完全没概念", "大概知道范围", "精确到小数点后两位"] },
+      // F2: 收入结构多元化
+      { dimension: 'F2', question: "你的收入来源有几种？", options: ["只有工资", "工资+副业", "工资+副业+投资+房租..."] },
+      // F3: 净资产意识
+      { dimension: 'F3', question: "买车买房时，你更关心什么？", options: ["月供/首付多少", "总价多少", "净资产增值多少"] },
+      // R1: 风险承受力
+      { dimension: 'R1', question: "你的投资能接受多大亏损？", options: ["不能亏", "5-10%", "20%以上"] },
+      // R2: 恐慌指数
+      { dimension: 'R2', question: "股市下跌20%时你的第一反应是？", options: ["全部卖出", "观望不动", "加仓买入"] },
+      // R3: 杠杆态度
+      { dimension: 'R3', question: "你对借钱投资的看法是？", options: ["绝对不行", "少量可以", "能借多少借多少"] },
+      // C1: 消费冲动度
+      { dimension: 'C1', question: "看到喜欢但非必需的东西，你会？", options: ["立刻下单", "犹豫一下还是买", "忍住不买"] },
+      // C2: 极简倾向
+      { dimension: 'C2', question: "你理想的生活状态是？", options: ["物质丰富", "够用就好", "极简到极致"] },
+      // C3: 社交消费压力
+      { dimension: 'C3', question: "朋友聚餐人均300，你会？", options: ["爽快去", "有点犹豫但去", "找理由不去"] },
+      // P1: FIRE目标清晰度
+      { dimension: 'P1', question: "你知道FIRE需要多少钱吗？", options: ["完全不知道", "听过25倍年支出", "有自己的详细计算表"] },
+      // P2: 储蓄率稳定性
+      { dimension: 'P2', question: "你的月储蓄率大约是？", options: ["基本为负", "10-30%", "50%以上"] },
+      // P3: 退休紧迫感
+      { dimension: 'P3', question: "你想什么时候退休？", options: ["不想退休，爱工作", "正常退休年龄", "40岁前"] },
+      // I1: 投资知识水平
+      { dimension: 'I1', question: "你能解释PE、PB、ROE吗？", options: ["完全不懂", "听过但不会用", "张口就来"] },
+      // I2: 主动/被动偏好
+      { dimension: 'I2', question: "你更信哪种投资方式？", options: ["听消息跟风", "自己研究选股", "指数基金定投"] },
+      // I3: 收益预期
+      { dimension: 'I3', question: "你预期的年化收益率是？", options: ["跑赢通胀就行", "8-12%", "20%以上"] },
+
+      // 第二轮
+      { dimension: 'F1', question: "你有记账的习惯吗？", options: ["从不记账", "偶尔记", "每笔都记"] },
+      { dimension: 'F2', question: "如果你失业，能撑多久？", options: ["一个月都难", "3-6个月", "一年以上"] },
+      { dimension: 'F3', question: "你认为什么是财富？", options: ["月收入高低", "银行存款", "净资产"] },
+      { dimension: 'R1', question: "你玩过合约或期权吗？", options: ["那是啥", "玩过小亏", "玩过大赚大亏"] },
+      { dimension: 'R2', question: "你的钱主要放在哪里？", options: ["银行存款", "余额宝等货基", "股票基金等高风险"] },
+      { dimension: 'R3', question: "你对房贷的态度是？", options: ["无债一身轻", "适当杠杆", "能贷多少贷多少"] },
+      { dimension: 'C1', question: "双11你会？", options: ["疯狂囤货", "买点需要的", "完全不参与"] },
+      { dimension: 'C2', question: "你认为多少钱够FIRE？", options: ["5000万以上", "1000万", "300万以下"] },
+      { dimension: 'C3', question: "朋友借钱，你会？", options: ["不好意思拒绝", "看关系借", "原则不借"] },
+      { dimension: 'P1', question: "你有详细的财务规划吗？", options: ["没有", "大概想法", "详细Excel表"] },
+      { dimension: 'P2', question: "你能坚持高储蓄多久？", options: ["很难坚持", "1-2年", "长期坚持没问题"] },
+      { dimension: 'P3', question: "你现在离FIRE还有多远？", options: ["遥不可及", "有点差距", "快了"] },
+      { dimension: 'I1', question: "你读过几本投资理财书？", options: ["0本", "1-3本", "5本以上"] },
+      { dimension: 'I2', question: "你的投资决策依据是？", options: ["直觉/感觉", "听大V推荐", "自己的研究"] },
+      { dimension: 'I3', question: "你认为巴菲特的年化收益是多少？", options: ["20%+", "15%左右", "10%左右"] }
+    ];
+
+    // 27种财务人格类型
+    const PERSONALITY_TYPES = [
+      {
+        code: 'FIRE', name: 'FIRE达人', nameEn: 'FIRE Master', emoji: '🔥',
+        desc: '你就是财务自由的活教材！储蓄率50%+，10年内FIRE的目标让你自律到可怕。你的生活简朴有计划，投资稳健有章法，朋友们既羡慕又觉得你有点"变态"。但你心里清楚：自由，值得一切牺牲。',
+        vector: [3,3,3,2,3,2,3,3,3,3,3,3,2,2,2]
+      },
+      {
+        code: 'COAST', name: '躺平FIRE', nameEn: 'Coast FIRE', emoji: '🏖️',
+        desc: '你已经积累了足够的资产，现在只需要"躺平"让复利工作。工作对你来说是选择而非必须，这种淡定从容让打工人羡慕嫉妒恨。你在Barista和Fat之间游刃有余，真正的FIRE赢家。',
+        vector: [3,3,3,2,3,1,2,2,2,3,2,2,2,2,2]
+      },
+      {
+        code: 'BARISTA', name: '兼职FIRE', nameEn: 'Barista FIRE', emoji: '☕',
+        desc: '你已经半退休了，工作只是图个乐子。不用朝九晚五，不用看老板脸色，在星巴克打打工就能覆盖基本开支。这种"半自由"状态，是很多人梦寐以求的理想生活。',
+        vector: [3,2,2,1,3,1,2,3,2,3,2,3,1,2,1]
+      },
+      {
+        code: 'LEAN', name: '苦行僧FIRE', nameEn: 'Lean FIRE', emoji: '🥗',
+        desc: '你的FIRE目标是通过极简生活实现的，年支出控制在10万以下让你能提前退休。别人看来你有点"苦"，但你享受这种低欲望的自由。自制力Max，节俭是美德不是抠门。',
+        vector: [2,2,3,1,3,1,3,3,3,3,3,3,2,2,1]
+      },
+      {
+        code: 'FAT', name: '富贵FIRE', nameEn: 'Fat FIRE', emoji: '🥩',
+        desc: '你的FIRE是富贵版，年花销百万级别。要么是真的有钱，要么对未来的支出过于乐观。不管怎样，你不打算降低生活品质来换取自由，"穷得只剩下钱"说的是你吧。',
+        vector: [3,3,3,2,2,2,1,1,1,2,2,2,3,2,3]
+      },
+      {
+        code: 'SAVER', name: '仓鼠党', nameEn: 'The Saver', emoji: '🐹',
+        desc: '你是天生的储蓄家，看到账户余额增长就开心。但问题是你只存不投，钱躺在银行贬值。你的风险厌恶让你错失了很多机会，是时候学习投资了！通胀这个小偷，正在悄悄偷你的钱。',
+        vector: [2,1,2,1,1,1,2,3,2,2,3,1,1,1,1]
+      },
+      {
+        code: 'SPENDER', name: '月光族', nameEn: 'Moonlight Clan', emoji: '🌙',
+        desc: '你的钱好像长了翅膀，发工资当天就飞走了。不知道钱花哪去了，只知道自己很穷。月光是一种生活方式，但不建议当成人生目标。开始记账吧，不然下个月还是吃土。',
+        vector: [1,1,1,1,1,1,1,1,2,1,1,1,1,1,2]
+      },
+      {
+        code: 'GAMBLER', name: '赌狗', nameEn: 'The Gambler', emoji: '🎲',
+        desc: '你不是投资，是赌博。合约、杠杆、山寨币，什么刺激玩什么。暴富的梦想让你夜不能寐，但爆仓的噩梦总成真。十赌九输，你还在赌那1%的概率。收手吧，岸上风景也不错。',
+        vector: [1,1,1,3,1,3,1,2,1,1,1,2,1,3,3]
+      },
+      {
+        code: 'HODL', name: '币圈HODL', nameEn: 'Crypto HODL', emoji: '💎',
+        desc: 'Diamond Hands！你全仓山寨币，坚信"一币一嫩模"。比特币是你的信仰，ETH是你的希望，狗狗币是你的快乐。涨了就是"永远不下车"，跌了就是"抄底机会"。你的心电图和K线图同步波动。',
+        vector: [2,1,2,3,1,2,1,2,1,1,1,2,2,3,3]
+      },
+      {
+        code: 'INDEX', name: '指数信徒', nameEn: 'Index Believer', emoji: '📈',
+        desc: 'Boglehead是你精神的家园。标普500是你唯一的爱，定投是你唯一的策略。你相信"躺赢"，市场波动对你来说只是噪音。长期持有，分散投资，你是最理性的投资者。但说实话，有点无聊。',
+        vector: [3,2,3,2,3,1,2,2,2,3,2,2,3,1,2]
+      },
+      {
+        code: 'HOUSE', name: '房奴', nameEn: 'House Slave', emoji: '🏠',
+        desc: '房子=全部财富。你坚信"买房永远不会亏"，把所有钱都砸进房地产。月供占了收入的一半，但你睡得安稳——至少在房价下跌前。房价涨你就开心，跌了你就"自住不怕跌"。愿你的房子真的值得。',
+        vector: [2,1,2,1,2,2,2,1,2,2,2,2,1,1,2]
+      },
+      {
+        code: 'DEBT', name: '负债累累', nameEn: 'Deep in Debt', emoji: '💳',
+        desc: '信用卡、网贷、花呗、白条...你欠了一屁股债。拆东墙补西墙是你的日常，催收电话是你的闹钟。债务像黑洞一样吞噬你的生活。是时候面对现实了，债务不会自己消失，但你可以消灭债务。',
+        vector: [1,1,1,1,1,3,1,1,1,1,1,1,1,1,3]
+      },
+      {
+        code: 'RICH', name: '富二代', nameEn: 'Rich Kid', emoji: '👶',
+        desc: '你理解的"理财"是"怎么花父母的钱"。FIRE对你来说不是目标，是起点。你的财务问题和我们不一样：是买保时捷还是法拉利，是住联排还是独栋。恭喜你，但请记住：钱终归要自己赚才有意义。',
+        vector: [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      },
+      {
+        code: 'HUSTLE', name: '副业狂魔', nameEn: 'Side Hustle King', emoji: '🔄',
+        desc: '你的主业是搞副业。白天上班，晚上送外卖，周末摆摊，你在用时间换金钱。多份收入让你有安全感，但也把你累得半死。效率不是你的强项，但努力绝对是的。或许该想想：努力的方向对不对？',
+        vector: [2,3,2,2,2,1,2,2,2,2,2,2,2,2,2]
+      },
+      {
+        code: 'FRUGAL', name: '极简达人', nameEn: 'Frugal Master', emoji: '🍃',
+        desc: '省钱是你的超能力。用别人的优惠券，买临期食品，拼单砍价你是专业的。你的生活成本极低，但生活质量未必差。极端节俭是一种艺术，你把省钱玩出了花。但偶尔对自己好点吧，钱是用来提升幸福感的。',
+        vector: [2,1,2,1,2,1,3,3,3,2,3,2,2,1,1]
+      },
+      {
+        code: 'YOLO', name: 'YOLO族', nameEn: 'YOLO Tribe', emoji: '🎉',
+        desc: 'You Only Live Once！你活在当下，明天的事明天再说。旅行、美食、派对，你一个不落。储蓄？那是什么。你的快乐是真的，但钱包空了也是真的。希望YOLO的尽头不是后悔。',
+        vector: [1,1,1,2,1,1,1,1,3,1,1,1,1,1,2]
+      },
+      {
+        code: 'ANXIETY', name: '焦虑存钱', nameEn: 'Anxiety Saver', emoji: '😰',
+        desc: '你存钱不是因为自律，是因为焦虑。失业、生病、意外，你总觉得灾难要来了。钱是你的安全毯，账户余额决定你的睡眠质量。适当焦虑是好事，但过度焦虑会让你失去生活的乐趣。放轻松，没那么糟。',
+        vector: [2,2,2,1,2,1,2,2,2,2,3,2,2,1,1]
+      },
+      {
+        code: 'BOOMER', name: '存款党', nameEn: 'Bank Only', emoji: '🏦',
+        desc: '银行存款是你唯一信任的投资。股票是赌场，基金是骗局，只有银行是安全的。你的钱在银行睡大觉，跑不赢通胀但胜在安心。你是对的，至少有一半是对的——钱确实安全，但购买力在悄悄溜走。',
+        vector: [2,1,2,1,1,1,2,2,2,2,3,2,1,1,1]
+      },
+      {
+        code: 'MEME', name: '跟风炒', nameEn: 'Meme Follower', emoji: '🐸',
+        desc: '你的投资策略是"听消息"。群里推荐啥买啥，大V说啥是啥。你是完美的韭菜，被收割了一茬又一茬。跟风炒作让你有参与感，但钱包在哭泣。独立思考很重要，即使很难。',
+        vector: [1,1,1,2,1,2,1,1,2,1,1,1,1,3,3]
+      },
+      {
+        code: 'SIDE', name: '随波逐流', nameEn: 'Just Floating', emoji: '😐',
+        desc: '你从没认真思考过财务问题。有多少钱花多少钱，没钱了就赚，没钱赚了就省。你的财务状况像浮萍，随波逐流。没有目标也没有计划，反正船到桥头自然直。但船真的会直吗？',
+        vector: [1,1,1,1,1,1,2,2,2,1,1,2,1,1,1]
+      },
+      {
+        code: 'DREAM', name: '做梦富', nameEn: 'Dream Chaser', emoji: '💭',
+        desc: '你的财富主要存在于想象中。元宇宙、NFT、Web3，你相信下一个风口会让你暴富。梦想是好的，但行动更重要。与其等风口，不如提升自己的赚钱能力。机会永远留给有准备的人——而你还在等。',
+        vector: [1,1,1,3,1,2,1,1,1,1,1,1,1,3,3]
+      },
+      {
+        code: 'WORK', name: '工作狂', nameEn: 'Workaholic', emoji: '💼',
+        desc: '你爱工作，工作爱你，FIRE是什么不想退休。你的成就感来自职业成就，而不是财务自由。或许你是对的，但过度工作可能会让你没有时间享受财富。工作是马拉松，不是百米冲刺。',
+        vector: [2,2,2,1,2,1,2,1,2,1,2,1,2,1,2]
+      },
+      {
+        code: 'FAMILY', name: '家庭至上', nameEn: 'Family First', emoji: '👨‍👩‍👧',
+        desc: '你的钱都给了家庭和孩子。孩子的教育、父母的健康、家庭的和睦，是你最重要的投资。你无私奉献，但有时也需要为自己考虑一下。家庭责任重要，但自己的幸福也很重要。',
+        vector: [2,2,2,1,2,1,2,2,2,2,2,2,2,1,2]
+      },
+      {
+        code: 'LUXURY', name: '品质追求', nameEn: 'Luxury Lover', emoji: '✨',
+        desc: '生活品质是你的信仰。好车、好表、好酒，你值得拥有。你努力赚钱就是为了享受生活，这是你的选择。但要注意：高品质生活需要持续的高收入支撑，收入停了生活还会高品质吗？',
+        vector: [2,2,1,2,2,2,1,1,2,2,1,2,2,2,2]
+      },
+      {
+        code: 'CHAOS', name: '财务混乱', nameEn: 'Financial Chaos', emoji: '🌀',
+        desc: '你的财务状况像你的房间一样混乱。不知道有多少钱，不知道花哪去了，也不知道下个月能不能撑住。你迟早需要面对这个问题，越早越好。混乱的成本很高，从整理开始吧。',
+        vector: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      },
+      {
+        code: 'START', name: '起步阶段', nameEn: 'Just Started', emoji: '🌱',
+        desc: '你刚开始理财，一切都很新鲜。阅读理财书籍、学习投资知识、尝试记账，你在正确的路上。种一棵树最好的时间是十年前，第二好的时间是现在。坚持下去，你会看到成果的。',
+        vector: [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+      },
+      {
+        code: 'NORMAL', name: '普通人', nameEn: 'Average Joe', emoji: '👤',
+        desc: '你就是普通人，不富不穷，不好不坏。有点储蓄但不投资，有点负债但不失控，有理财意识但不强。你是大多数人的写照。成为普通人不可怕，可怕的是永远甘于普通。',
+        vector: [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+      },
+      {
+        code: 'WTF', name: '财务迷茫', nameEn: 'WTF', emoji: '❓',
+        desc: '你完全没概念。钱是什么？理财是什么？FIRE是什么？你只知道没钱了就去赚，有钱了就花。你的财务状况一团乱，但你还没意识到。建议：从认识自己的财务状况开始吧。',
+        vector: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      }
+    ];
+
+    // ============ 状态管理 ============
+    let currentAnswers = {};
+    let shuffledQuestions = [];
+
+    // ============ 工具函数 ============
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function normalizeDimension(score) {
+      if (score <= 3) return 'L';
+      if (score <= 5) return 'M';
+      return 'H';
+    }
+
+    function calculateMatch(userVector, typeVector) {
+      let distance = 0;
+      for (let i = 0; i < 15; i++) {
+        distance += Math.abs(userVector[i] - typeVector[i]);
+      }
+      const maxDistance = 15 * 2; // 最大可能距离
+      return Math.max(0, Math.round((1 - distance / maxDistance) * 100));
+    }
+
+    // ============ 界面切换 ============
+    function hideAll() {
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('intro').classList.remove('visible');
+      document.getElementById('test').style.display = 'none';
+      document.getElementById('result').style.display = 'none';
+    }
+
+    function showIntro() {
+      hideAll();
+      document.getElementById('intro').classList.remove('hidden');
+      document.getElementById('intro').classList.add('visible');
+    }
+
+    function showTest() {
+      hideAll();
+      document.getElementById('test').style.display = 'block';
+    }
+
+    function showResult() {
+      hideAll();
+      document.getElementById('result').style.display = 'block';
+    }
+
+    function goToIntro() {
+      showIntro();
+    }
+
+    // ============ 测试逻辑 ============
+    function startTest() {
+      // 重置状态
+      currentAnswers = {};
+      shuffledQuestions = shuffleArray(QUESTIONS);
+
+      // 渲染题目
+      renderQuestions();
+      updateProgress();
+
+      // 切换界面
+      showTest();
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      shuffledQuestions.forEach((q, index) => {
+        const questionCard = document.createElement('div');
+        questionCard.className = 'question-card';
+
+        const questionText = document.createElement('div');
+        questionText.className = 'question-text';
+        questionText.textContent = `${index + 1}. ${q.question}`;
+
+        const optionsList = document.createElement('div');
+        optionsList.className = 'options-list';
+
+        q.options.forEach((option, optIndex) => {
+          const optionItem = document.createElement('div');
+          optionItem.className = 'option-item';
+          optionItem.dataset.question = index;
+          optionItem.dataset.value = optIndex + 1;
+
+          const optionRadio = document.createElement('div');
+          optionRadio.className = 'option-radio';
+
+          const optionText = document.createElement('span');
+          optionText.className = 'option-text';
+          optionText.textContent = option;
+
+          optionItem.appendChild(optionRadio);
+          optionItem.appendChild(optionText);
+
+          optionItem.addEventListener('click', () => selectOption(index, optIndex + 1, optionItem));
+
+          optionsList.appendChild(optionItem);
+        });
+
+        questionCard.appendChild(questionText);
+        questionCard.appendChild(optionsList);
+        container.appendChild(questionCard);
+      });
+    }
+
+    function selectOption(questionIndex, value, element) {
+      currentAnswers[questionIndex] = value;
+
+      // 更新UI
+      const allOptions = document.querySelectorAll(`.option-item[data-question="${questionIndex}"]`);
+      allOptions.forEach(opt => opt.classList.remove('selected'));
+      element.classList.add('selected');
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const answered = Object.keys(currentAnswers).length;
+      const total = shuffledQuestions.length;
+      const percentage = (answered / total) * 100;
+
+      document.getElementById('progress-text').textContent = `${answered} / ${total}`;
+      document.getElementById('progress-fill').style.width = `${percentage}%`;
+
+      // 启用/禁用提交按钮
+      const submitBtn = document.getElementById('submit-btn');
+      if (answered === total) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '提交并查看结果';
+      } else {
+        submitBtn.disabled = true;
+        submitBtn.textContent = `完成才能提交 (${total - answered}题剩余)`;
+      }
+    }
+
+    function submitTest() {
+      // 计算用户向量
+      const userVector = calculateUserVector();
+
+      // 匹配最佳类型
+      const bestMatch = findBestMatch(userVector);
+
+      // 显示结果
+      displayResult(bestMatch, userVector);
+    }
+
+    function calculateUserVector() {
+      const dimensionScores = {};
+
+      // 初始化
+      DIMENSIONS.forEach(d => {
+        dimensionScores[d.code] = 0;
+      });
+
+      // 计算每个维度的得分
+      shuffledQuestions.forEach((q, index) => {
+        const answer = currentAnswers[index] || 2; // 默认中间值
+        dimensionScores[q.dimension] += answer;
+      });
+
+      // 转换为向量（L=1, M=2, H=3）
+      const vector = DIMENSIONS.map(d => {
+        const score = dimensionScores[d.code];
+        if (score <= 3) return 1;
+        if (score <= 5) return 2;
+        return 3;
+      });
+
+      return vector;
+    }
+
+    function findBestMatch(userVector) {
+      let bestType = null;
+      let bestScore = -1;
+
+      PERSONALITY_TYPES.forEach(type => {
+        const matchScore = calculateMatch(userVector, type.vector);
+        if (matchScore > bestScore) {
+          bestScore = matchScore;
+          bestType = { ...type, matchScore };
+        }
+      });
+
+      return bestType;
+    }
+
+    function displayResult(result, userVector) {
+      // 基本信息
+      document.getElementById('result-emoji').textContent = result.emoji;
+      document.getElementById('result-type').textContent = result.name;
+      document.getElementById('result-type-en').textContent = result.nameEn;
+      document.getElementById('result-match').textContent = `匹配度 ${result.matchScore}%`;
+
+      // 描述
+      document.getElementById('result-desc').textContent = result.desc;
+
+      // 维度评分
+      const grid = document.getElementById('dimensions-grid');
+      grid.innerHTML = '';
+
+      DIMENSIONS.forEach((d, i) => {
+        const item = document.createElement('div');
+        item.className = 'dimension-item';
+
+        const value = userVector[i];
+        const valueText = value === 1 ? 'L' : value === 2 ? 'M' : 'H';
+
+        item.innerHTML = `
+          <div class="dimension-name">${d.name}</div>
+          <div class="dimension-value">${valueText}</div>
+        `;
+
+        grid.appendChild(item);
+      });
+
+      // 切换界面
+      showResult();
+    }
+
+    function restartTest() {
+      startTest();
+    }
+
+    // 初始化
+    showIntro();
+  </script>
+</body>
+</html>
